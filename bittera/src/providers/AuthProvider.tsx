@@ -1,4 +1,4 @@
-/* import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../services/api"; 
 import { LoginData } from "../pages/login/validator";
@@ -68,4 +68,4 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			{children}
 		</AuthContext.Provider>
 	);
-}; */
+}; 
