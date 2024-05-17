@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+/* import { ReactNode, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import axios from "axios";
 import { ModalError } from "../ModalError";
@@ -36,4 +36,4 @@ export const AxiosInterceptor = ({ children }: AxiosInterceptorProps) => {
 			{children}
 		</>
 	);
-};
+};  */

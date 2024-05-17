@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { api } from "../../services/api"
-import { SystemList } from "../../components/SystemList";
+import { SystemList } from "../../components/System/SystemList";
 
 
 interface System {

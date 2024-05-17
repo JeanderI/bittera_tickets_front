@@ -14,9 +14,9 @@ interface StoreListProps {
 }
 
 export const StoreList: React.FC<StoreListProps> = ({ stores }) => {
-   
+
     return (
-        <div>
+        <section>
             {stores.length > 0 ? (
                 <ul>
                     {stores.map((store) => (
@@ -32,6 +32,6 @@ export const StoreList: React.FC<StoreListProps> = ({ stores }) => {
             ) : (
                 <p>Nenhuma loja encontrada.</p>
             )}
-        </div>
+        </section>
     )
 }

@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const token = localStorage.getItem("voce-falando-ingles:token");
+		const token = localStorage.getItem("tickets:token");
 
 		if (!token) {
 			setLoading(false);
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			const { token } = response.data;
 
 			api.defaults.headers.common.authorization = `Bearer ${token}`;
-			localStorage.setItem("voce-falando-ingles:token", token);
+			localStorage.setItem("tickets:token", token);
 			if (response.status === 200) {
 				toast.success("Login realizado com sucesso");
 

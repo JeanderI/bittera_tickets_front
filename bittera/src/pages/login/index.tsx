@@ -15,44 +15,39 @@ export const Login = () => {
 	});
 
 	return (
-		<div>
-	
-
-			<div>
-				<div>
-					<h1>Login</h1>
-					<div onSubmit={handleSubmit(signIn)}>
-						<div>
-							{/* <span htmlFor="email">Usuario</span> */}
-							<input
-								type="text"
-								id="email"
-								{...register("email")}
-								placeholder="Insira seu nome de usuário"
-							/>
-							{errors.email && (
-								<span>{errors.email.message}</span>
-							)}
-						</div>
-						<div>
-							{/* <span htmlFor="password">Senha</span> */}
-							<input
-								type="password"
-								id="password"
-								{...register("password")}
-								placeholder="Insira sua senha"
-							/>
-							{errors.password && (
-								<span>{errors.password.message}</span>
-							)}
-						</div>
-
-						<button type="submit">Entrar</button>
-						<Link to={"/register"}>
-							<span>ainda não possui uma conta?</span>
-						</Link>
+		<div className="login-container">
+			<div className="login-form">
+				<h1>Login</h1>
+				<form onSubmit={handleSubmit(signIn)}>
+					<div className="form-group">
+						<label htmlFor="email">Usuário</label>
+						<input
+							type="text"
+							id="email"
+							{...register("email")}
+							placeholder="Insira seu nome de usuário"
+						/>
+						{errors.email && (
+							<span className="error-message">{errors.email.message}</span>
+						)}
 					</div>
-				</div>
+					<div className="form-group">
+						<label htmlFor="password">Senha</label>
+						<input
+							type="password"
+							id="password"
+							{...register("password")}
+							placeholder="Insira sua senha"
+						/>
+						{errors.password && (
+							<span className="error-message">{errors.password.message}</span>
+						)}
+					</div>
+					<button type="submit">Entrar</button>
+					<Link to={"/register"}>
+						<span className="register-link">Ainda não possui uma conta?</span>
+					</Link>
+				</form>
 			</div>
 		</div>
 	);

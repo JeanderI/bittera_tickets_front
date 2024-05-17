@@ -1,40 +1,24 @@
 import React from "react";
-
-interface User {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-  }
-  
-  interface Store {
-    id: string;
-    name: string;
-    city: string;
-    status: string;
-    owner: string;
-    cnpj: string;
-  }
-  
-  interface Ticket {
-    id: string;
-    title: string;
-    description: string;
-    date: string;
-    end_date: string;
-    type: string;
-    support: string;
-    user: User;
-    store: Store;
-  }
+import { Ticket } from "../../../pages/dashboard";
 
 interface TicketListProps {
     tickets: Ticket[];
+    toggleModal: () => void;
+    onEditTicket: (ticketId: string) => void;
+    onDeleteTicket: (ticketId: string) => void;
 }
 
-export const TicketList: React.FC<TicketListProps> = ({ tickets }) => {
+export const TicketList: React.FC<TicketListProps> = ({
+    tickets,
+    toggleModal,
+    onEditTicket,
+    onDeleteTicket,
+}) => {
     return (
         <div>
+            <button type="button" onClick={toggleModal}>
+                Adicionar Ticket
+            </button>
             {tickets.length > 0 ? (
                 <ul>
                     {tickets.map((ticket) => (
@@ -52,7 +36,14 @@ export const TicketList: React.FC<TicketListProps> = ({ tickets }) => {
                             <p>{ticket.store.name}</p>
                             <p>{ticket.store.owner}</p>
                             <p>{ticket.store.status}</p>
-                            
+                            <div>
+                                <button type="button" onClick={() => onEditTicket(ticket.id)}>
+                                    Editar
+                                </button>
+                                <button type="button" onClick={() => onDeleteTicket(ticket.id)}>
+                                    Deletar
+                                </button>
+                            </div>
                         </li>
                     ))}
                 </ul>
