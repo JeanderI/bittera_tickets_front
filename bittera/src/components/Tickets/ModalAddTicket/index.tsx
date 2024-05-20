@@ -1,142 +1,192 @@
-import { Create, schema } from "./validation";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "../../../services/api";
+import { toast } from "react-toastify";
+import { Ticket } from "../../../pages/dashboard";
+import { Create } from "./validation";
 import { Modal } from "../../Modal";
 
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { api } from "../../../services/api";
-
-import { toast } from "react-toastify";
-
-import { Ticket } from "../../../pages/dashboard";
+interface Store {
+  id: string;
+  name: string;
+}
 
 interface ModalAddTicketProps {
-	toggleTicketModal: () => void;
-	setTickets: Dispatch<SetStateAction<Ticket[]>>;
+  toggleTicketModal: () => void;
+  setTickets: React.Dispatch<React.SetStateAction<Ticket[]>>;
 }
 
 export const ModalAddTicket = ({
-	toggleTicketModal,
-	setTickets,
+  toggleTicketModal,
+  setTickets,
 }: ModalAddTicketProps) => {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<Create>({
-		resolver: zodResolver(schema),
-	});
+  const [stores, setStores] = useState<Store[]>([]);
 
-	const createTicket = async (data: Create) => {
-		try {
-			const token = localStorage.getItem("tickets:token");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch, // Remova o watch, pois não será mais necessário
+  } = useForm<Create>();
 
-			if (!token) {
-				toast.error("Token não encontrado no localStorage");
-				return;
-			}
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        const token = localStorage.getItem("tickets:token");
 
-			const config = {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			};
+        if (!token) {
+          toast.error("Token não encontrado no localStorage");
+          return;
+        }
 
-			const response = await api.post("/tickets", data, config);
-			setTickets((previousTickets) => [response.data, ...previousTickets]);
-			toggleTicketModal();
+        const config = {
+          headers: {
+            Authorization: `Bearer${token}`,
+          },
+        };
 
-			if (response.status === 201) {
-				toast.success("Ticket criada com sucesso");
-			} else {
-				if (response.status === 409) {
-					toast.error("Erro ao registrar usuário: Conflito. Usuário já existe.");
-				} else if (response.status === 403) {
-					toast.error("Erro ao registrar usuário: Acesso proibido.");
-				} else {
-					toast.error("Erro ao registrar usuário: " + response.data);
-				}
-			}
-		} catch (error: unknown) {
-			if (error instanceof Error) {
-				toast.error("Erro ao registrar usuário: " + error.message);
-			} else {
-				toast.error("Erro ao registrar usuário: " + error);
-			}
-		}
-	};
+        const response = await api.get("/store", config);
+        setStores(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar lojas:", error);
+        toast.error("Erro ao buscar lojas");
+      }
+    };
 
-	useEffect(() => {
-		if (Object.keys(errors).length > 0) {
-			toast.error("Erro ao criar tarefa. Por favor, verifique os campos.");
-		}
-	}, [errors]);
+    fetchStores();
+  }, []);
 
-	return (
-		<Modal toggleModal={toggleTicketModal}>
-			
+  const createTicket = async (data: Create) => {
+    try {
+      const token = localStorage.getItem("tickets:token");
+      console.log(token);
+      if (!token) {
+        toast.error("Token não encontrado no localStorage");
+        return;
+      }
 
-			<form onSubmit={handleSubmit(createTicket)}>
-				<div>
-					<label htmlFor="title">Título</label>
-					<input
-						type="text"
-						id="title"
-						{...register("title")}
-						placeholder="Insira o título"
-					/>
-					{errors.title && <span>{errors.title.message}</span>}
-				</div>
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      console.log("Configuração de headers:", config);
+      const storeId = watch("storeId");
 
-				<div>
-					<label htmlFor="description">Descrição</label>
-					<input
-						type="text"
-						id="description"
-						{...register("description")}
-						placeholder="Insira a descrição"
-					/>
-					{errors.description && (
-						<span>{errors.description.message}</span>
-					)}
-				</div>
+      const url = `/ticket/${storeId}`;
+      console.log(storeId);
+      const response = await api.post(url, data, config);
 
-				<div>
-					<label htmlFor="date">
-						data
-					</label>
-					<input id="date" {...register("date")} placeholder="Insira o texto" />
-					{errors.date && <span>{errors.date.message}</span>}
-				</div>
+      if (response.status === 201) {
+        setTickets((previousTickets: Ticket[]) => [
+          response.data,
+          ...previousTickets,
+        ]);
+        toast.success("Ticket criado com sucesso");
+        toggleTicketModal();
+      } else {
+        toast.error("Erro ao criar ticket");
+      }
+    } catch (error) {
+      console.error("Erro ao criar ticket:", error);
+      toast.error("Erro ao criar ticket");
+    }
+  };
 
-				<div>
-					<label htmlFor="end_date">data final</label>
-					<input type="text" id="end_date" {...register("end_date")} placeholder="00" />
-					{errors.end_date && <span>{errors.end_date.message}</span>}
-				</div>
+  return (
+    <Modal toggleModal={toggleTicketModal}>
+      <form onSubmit={handleSubmit(createTicket)}>
+        <div>
+          <label htmlFor="store">Loja</label>
+          <select
+            id="store"
+            {...register("storeId", { required: "A loja é obrigatória" })}
+            onChange={(e) =>
+              setValue("storeId", e.target.value, { shouldValidate: true })
+            }
+          >
+            <option value="">Selecione a loja</option>
+            {stores.map((store) => (
+              <option key={store.id} value={store.id}>
+                {store.name}
+              </option>
+            ))}
+          </select>
 
-				<div>
-					<label htmlFor="type">tipo</label>
-					<input type="text" id="type" {...register("type")} placeholder="00" />
-					{errors.type && <span>{errors.type.message}</span>}
-				</div>
+          {errors.storeId && <span>{errors.storeId.message}</span>}
+        </div>
 
-				<div>
-					<label htmlFor="support">suporte</label>
-					<input
-						type="text"
-						id="support"
-						{...register("support")}
-						placeholder="Insira a mensagem de ajuda"
-					/>
-					{errors.support && <span>{errors.support.message}</span>}
-				</div>
+        <div>
+          <label htmlFor="title">Título</label>
+          <input
+            type="text"
+            id="title"
+            {...register("title", { required: "Título é obrigatório" })}
+            placeholder="Insira o título"
+          />
+          {errors.title && <span>{errors.title.message}</span>}
+        </div>
 
-				
-				<div>
-					<button type="submit">Cadastrar</button>
-				</div>
-			</form>
-		</Modal>
-	);
+        <div>
+          <label htmlFor="description">Descrição</label>
+          <input
+            type="text"
+            id="description"
+            {...register("description", {
+              required: "Descrição é obrigatória",
+            })}
+            placeholder="Insira a descrição"
+          />
+          {errors.description && <span>{errors.description.message}</span>}
+        </div>
+
+        <div>
+          <label htmlFor="date">Data</label>
+          <input
+            type="text"
+            id="date"
+            {...register("date", { required: "Data é obrigatória" })}
+          />
+          {errors.date && <span>{errors.date.message}</span>}
+        </div>
+
+        <div>
+          <label htmlFor="end_date">Data Final</label>
+          <input
+            type="text"
+            id="end_date"
+            {...register("end_date", { required: "Data final é obrigatória" })}
+          />
+          {errors.end_date && <span>{errors.end_date.message}</span>}
+        </div>
+
+        <div>
+          <label htmlFor="type">Tipo</label>
+          <input
+            type="text"
+            id="type"
+            {...register("type", { required: "Tipo é obrigatório" })}
+            placeholder="Insira o tipo"
+          />
+          {errors.type && <span>{errors.type.message}</span>}
+        </div>
+
+        <div>
+          <label htmlFor="status">status</label>
+          <input
+            type="checkbox"
+            id="status"
+            {...register("status", { required: "Suporte é obrigatório" })}
+            placeholder="Insira a mensagem de ajuda"
+          />
+          {errors.status && <span>{errors.status.message}</span>}
+        </div>
+
+        <div>
+          <button type="submit">Cadastrar</button>
+        </div>
+      </form>
+    </Modal>
+  );
 };
