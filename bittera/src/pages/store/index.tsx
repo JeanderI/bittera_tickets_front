@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { StoreList } from "../../components/Store/StoreList";
+/* import { ModalAddStore } from "../../components/Store/CreateStore"; */
 
 interface Store {
   id: string;
@@ -12,12 +13,16 @@ interface Store {
 }
 
 export const Store = () => {
-  const [stores, setStore] = useState<Store[]>([]);
+  const [stores, setStores] = useState<Store[]>([]);
+
+  const [isOpenStoreModal, setIsOpenStoreModal] = useState(false);
+  const toggleStoreModal = () => setIsOpenStoreModal(!isOpenStoreModal);
+
   useEffect(() => {
     (async () => {
       try {
         const response = await api.get("/store");
-        setStore(response.data);
+        setStores(response.data);
       } catch (error) {
         console.error("Erro ao buscar a loja", error);
       }
@@ -25,6 +30,12 @@ export const Store = () => {
   }, []);
   return (
     <main>
+    {/*   {isOpenStoreModal && (
+        <ModalAddStore
+          toggleStoreModal={toggleStoreModal}
+          setStores={setStores}
+        />
+      )} */}
       <h1>stores</h1>
       <StoreList stores={stores} />
     </main>

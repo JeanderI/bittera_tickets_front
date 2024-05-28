@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { TicketList } from "../../components/Tickets/TicketList";
-import { ModalAddTicket } from "../../components/Tickets/ModalAddTicket";
+import { ModalAddTicket } from "../../components/Tickets/CreateTickets";
 import { ModalEditTicket } from "../../components/Tickets/ModalEditTicket";
 import { toast } from "react-toastify";
 import { AuthService } from "../../contexts/UserContext";
@@ -13,7 +13,7 @@ interface User {
   password: string;
 }
 
-interface Store {
+export interface Store {
   id: string;
   name: string;
   city: string;

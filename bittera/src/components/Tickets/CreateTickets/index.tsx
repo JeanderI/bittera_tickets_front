@@ -2,14 +2,10 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../../services/api";
 import { toast } from "react-toastify";
-import { Ticket } from "../../../pages/dashboard";
+import { Store, Ticket } from "../../../pages/dashboard";
 import { Create } from "./validation";
 import { Modal } from "../../Modal";
 
-interface Store {
-  id: string;
-  name: string;
-}
 
 interface ModalAddTicketProps {
   toggleTicketModal: () => void;
@@ -27,7 +23,7 @@ export const ModalAddTicket = ({
     handleSubmit,
     formState: { errors },
     setValue,
-    watch, // Remova o watch, pois não será mais necessário
+    watch, 
   } = useForm<Create>();
 
   useEffect(() => {
