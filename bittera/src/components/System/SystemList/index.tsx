@@ -7,12 +7,16 @@ interface System {
 }
 interface SystemListProps {
     systems: System[];
+    toggleModal: () => void;
 }
 
-export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
+    export const SystemList: React.FC<SystemListProps> = ({ systems, toggleModal }) => {
    
     return (
         <div>
+             <button type="button" onClick={toggleModal}>
+                Adicionar sistema
+            </button>
             {systems.length > 0 ? (
                 <ul>
                     {systems.map((system) => (

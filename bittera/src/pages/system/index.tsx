@@ -1,32 +1,44 @@
-import { useEffect, useState } from "react"
-import { api } from "../../services/api"
+import { useEffect, useState } from "react";
+import { api } from "../../services/api";
 import { SystemList } from "../../components/System/SystemList";
+import { ModalAddSystem } from "../../components/System/ModaladdSystem";
 
-
-interface System {
+export interface System {
     id: string;
     system: string;
-    icon: string
-
+    icon: string;
 }
+
 export const System = () => {
-    const [system, setSystem] = useState<System[]>([]);
+    const [systems, setSystems] = useState<System[]>([]);
+    const [isOpenSystemModal, setIsOpenSystemModal] = useState(false);
+
+    const toggleSystemModal = () => setIsOpenSystemModal(!isOpenSystemModal);
 
     useEffect(() => {
         (async () => {
             try {
-                const response = await api.get('/system'); 
-                setSystem(response.data);
+                const response = await api.get('/system');
+                setSystems(response.data);
             } catch (error) {
-                console.error("Erro ao buscar sistemas", error);  
+                console.error("Erro ao buscar sistemas", error);
             }
-        })();  
+        })();
     }, []);
 
     return (
         <main>
-            <h1>sistemas</h1>
-            <SystemList systems={system} />
+            {isOpenSystemModal && (
+                <ModalAddSystem
+                    toggleSystemModal={toggleSystemModal}
+                    setSystems={setSystems}
+                />
+            )}
+            <h1>Sistemas</h1>
+            <SystemList
+                systems={systems}
+                toggleModal={toggleSystemModal}
+            />
         </main>
-    )
-}
+    );
+};

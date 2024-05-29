@@ -11,12 +11,16 @@ interface Store {
 
 interface StoreListProps {
     stores: Store[];
+    toggleModal: () => void;
 }
 
-export const StoreList: React.FC<StoreListProps> = ({ stores }) => {
+export const StoreList: React.FC<StoreListProps> = ({ stores, toggleModal }) => {
 
     return (
         <section>
+            <button type="button" onClick={toggleModal}>
+                Adicionar Loja
+            </button>
             {stores.length > 0 ? (
                 <ul>
                     {stores.map((store) => (

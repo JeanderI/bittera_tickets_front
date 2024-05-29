@@ -9,12 +9,16 @@ interface Manager {
 
 interface ManagerListProps {
     managers: Manager[];
+    toggleModal: () => void;
 }
 
-export const ManagerList: React.FC<ManagerListProps> = ({ managers }) => {
+export const ManagerList: React.FC<ManagerListProps> = ({ managers, toggleModal }) => {
    
     return (
         <div>
+            <button type="button" onClick={toggleModal}>
+                Adicionar Loja
+            </button>
             {managers.length > 0 ? (
                 <ul>
                     {managers.map((manager) => (

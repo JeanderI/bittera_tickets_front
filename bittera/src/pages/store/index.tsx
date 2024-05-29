@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { StoreList } from "../../components/Store/StoreList";
-/* import { ModalAddStore } from "../../components/Store/CreateStore"; */
+import { ModalAddStore } from "../../components/Store/CreateStore"; 
 
 interface Store {
   id: string;
@@ -9,7 +9,7 @@ interface Store {
   city: string;
   status: string;
   owner: string;
-  cnpj: string;
+  cnpj: string; 
 }
 
 export const Store = () => {
@@ -30,14 +30,15 @@ export const Store = () => {
   }, []);
   return (
     <main>
-    {/*   {isOpenStoreModal && (
+       {isOpenStoreModal && (
         <ModalAddStore
           toggleStoreModal={toggleStoreModal}
           setStores={setStores}
         />
-      )} */}
+      )}
       <h1>stores</h1>
-      <StoreList stores={stores} />
+      <StoreList stores={stores} 
+      toggleModal={toggleStoreModal}/>
     </main>
   );
 };
