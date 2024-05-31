@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { ManagerList } from "../../components/Manager/ManagerList";
 import { ModalAddManager } from "../../components/Manager/ManagerCreate";
+import { Container } from "../../components/Container/styles";
+import { Header } from "../../components/Header/styles";
+import { GiExitDoor } from "react-icons/gi";
+import logo from "../../assets/LogoBittera.jpg"
 
 export interface Manager {
   id: string;
@@ -26,16 +30,23 @@ export const Manager = () => {
   }, []);
 
   return (
-    <main>
+    <Container>
+      <Header>
+        <img src={logo} alt="" />
+        <button><GiExitDoor /></button>
+      </Header>
+      <main>
       {isOpenManagerModal && (
         <ModalAddManager
         toggleManagerModal={toggleManagerModal}
         setManagers={setManagers}
         />
       )}
-      <h1>Gerentes</h1>
-      <ManagerList managers={manager} 
-      toggleModal={toggleManagerModal}/>
-    </main>
+        
+        <ManagerList managers={manager} 
+        toggleModal={toggleManagerModal}/>
+      </main>
+    </Container>
+    
   );
 };

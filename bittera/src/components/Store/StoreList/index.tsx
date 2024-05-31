@@ -1,4 +1,7 @@
 import React from "react";
+import { FaSearch } from "react-icons/fa";
+import { ButtonAdd, ContainerButton, ContainerSearch, ContainerSection, ContainerMenu, Item, List, ListTags, Section } from "../../Section/styles";
+import { StatusText } from "./styles";
 
 interface Store {
     id: string;
@@ -17,25 +20,46 @@ interface StoreListProps {
 export const StoreList: React.FC<StoreListProps> = ({ stores, toggleModal }) => {
 
     return (
-        <section>
-            <button type="button" onClick={toggleModal}>
-                Adicionar Loja
-            </button>
-            {stores.length > 0 ? (
-                <ul>
-                    {stores.map((store) => (
-                        <li key={store.id}>
-                            <h3>{store.name}</h3>
-                            <p>{store.city}</p>
-                            <p>{store.cnpj}</p>
-                            <p>{store.owner}</p>
-                            <p>{store.status}</p>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>Nenhuma loja encontrada.</p>
-            )}
-        </section>
+        <Section>
+            <ContainerSection>
+                <ContainerMenu>
+                    <h1>Lojas</h1>
+                    <ContainerButton>
+                        <ButtonAdd type="button" onClick={toggleModal}>
+                            + Adicionar Loja 
+                        </ButtonAdd>
+
+                        <ContainerSearch>
+                            <FaSearch />
+                            <input placeholder="pesquisar..." type="text" />
+                        </ContainerSearch>
+                       
+                    </ContainerButton>
+                   
+                </ContainerMenu>
+                <ListTags>
+                    <p>Nome</p>
+                    <p>Cidade</p>
+                    <p>CNPJ</p>
+                    <p>Gerente</p>
+                    <p>Status</p>
+                </ListTags>
+                {stores.length > 0 ? (
+                    <List>
+                        {stores.map((store) => (
+                            <Item key={store.id}>
+                                <p>{store.name}</p>
+                                <p>{store.city}</p>
+                                <p>{store.cnpj}</p>
+                                <p>{store.owner}</p>
+                                <StatusText status={store.status}>{store.status}</StatusText>
+                            </Item>
+                        ))}
+                    </List>
+                ) : (
+                    <p>Nenhuma loja encontrada.</p>
+                )}
+            </ContainerSection>
+        </Section>
     )
 }

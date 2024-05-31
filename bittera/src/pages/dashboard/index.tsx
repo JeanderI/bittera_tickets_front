@@ -5,6 +5,10 @@ import { ModalAddTicket } from "../../components/Tickets/CreateTickets";
 import { ModalEditTicket } from "../../components/Tickets/ModalEditTicket";
 import { toast } from "react-toastify";
 import { AuthService } from "../../contexts/UserContext";
+import { Container } from "../../components/Container/styles";
+import { Header } from "../store/styled";
+import { GiExitDoor } from "react-icons/gi";
+import logo from "../../assets/LogoBittera.jpg"
 
 interface User {
   id: string;
@@ -86,23 +90,30 @@ export const Dashboard = () => {
   }, []);
 
   return (
-    <div>
-      {isOpenTicketModal && (
-        <ModalAddTicket
-          toggleTicketModal={toggleTicketModal}
-          setTickets={setTickets}
-        />
-      )}
+    <Container>
+      <Header>
+        <img src={logo} alt="" />
+        <button><GiExitDoor /></button>
+      </Header>
 
-      {isOpenTicketEdit && (
-        <ModalEditTicket
-          toggleTicketEdit={() => toggleTicketEdit(ticketItemId)}
-          setTickets={setTickets}
-          ticketId={ticketItemId}
-        />
-      )}
+      
       <main>
-        <h1>Tickets</h1>
+        {isOpenTicketModal && (
+          <ModalAddTicket
+            toggleTicketModal={toggleTicketModal}
+            setTickets={setTickets}
+          />
+        )}
+
+        {isOpenTicketEdit && (
+          <ModalEditTicket
+            toggleTicketEdit={() => toggleTicketEdit(ticketItemId)}
+            setTickets={setTickets}
+            ticketId={ticketItemId}
+          />
+        )}
+
+        
         <TicketList
           toggleModal={toggleTicketModal}
           tickets={tickets}
@@ -110,6 +121,6 @@ export const Dashboard = () => {
           onDeleteTicket={deleteTicket}
         />
       </main>
-    </div>
+    </Container>
   );
 };

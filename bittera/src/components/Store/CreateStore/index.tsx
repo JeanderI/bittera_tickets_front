@@ -6,6 +6,7 @@ import { CreateStore, schema } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react"; 
 import { Modal } from "../../Modal";
+import { ContainerButton, FormGroup, Input, Label, Select, SubmitButton } from "./style";
 
 
 interface ModalAddStoreProps {
@@ -73,61 +74,62 @@ export const ModalAddStore = ({
     return (
         <Modal toggleModal={toggleStoreModal}>
             <form onSubmit={handleSubmit(createStore)}>
-                <div>
-					<label htmlFor="name">Nome</label>
-					<input
+                <FormGroup>
+					<Label htmlFor="name">Nome</Label>
+					<Input
 						type="text"
 						id="name"
 						{...register("name")}
-						placeholder="Insira o título"
+						placeholder="Insira o nome da loja"
 					/>
 					{errors.name && <span>{errors.name.message}</span>}
-				</div>
+				</FormGroup>
 
-                <div>
-					<label htmlFor="city">Cidade</label>
-					<input
+                <FormGroup>
+					<Label htmlFor="city">Cidade</Label>
+					<Input
 						type="text"
 						id="city"
 						{...register("city")}
-						placeholder="Insira o título"
+						placeholder="Insira a Cidade"
 					/>
 					{errors.city && <span>{errors.city.message}</span>}
-				</div>
+				</FormGroup>
 
-                <div>
-					<label htmlFor="status">Status</label>
-					<input
-						type="text"
-						id="status"
-						{...register("status")}
-						placeholder="Insira o título"
-					/>
-					{errors.status && <span>{errors.status.message}</span>}
-				</div>
+                <FormGroup>
+                <Label htmlFor="status">Status</Label>
+                    <Select id="status" {...register("status")}>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                        <option value="Em manutencao">Em manutencao</option>
+                    </Select>
+                    {errors.status && <span>{errors.status.message}</span>}
+				</FormGroup>
 
-                <div>
-					<label htmlFor="owner">Gerente</label>
-					<input
+                <FormGroup>
+					<Label htmlFor="owner">Gerente</Label>
+					<Input
 						type="text"
 						id="owner"
 						{...register("owner")}
-						placeholder="Insira o título"
+						placeholder="Insira o gerente"
 					/>
 					{errors.owner && <span>{errors.owner.message}</span>}
-				</div>
+				</FormGroup>
 
-                <div>
-					<label htmlFor="cnpj">CNPJ</label>
-					<input
+                <FormGroup>
+					<Label htmlFor="cnpj">CNPJ</Label>
+					<Input
 						type="text"
 						id="cnpj"
 						{...register("cnpj")}
-						placeholder="Insira o título"
+						placeholder="Insira o CNPJ"
 					/>
 					{errors.cnpj && <span>{errors.cnpj.message}</span>}
-				</div>
-                <button type="submit">Criar Tarefa</button>
+				</FormGroup>
+                <ContainerButton>
+                    <SubmitButton type="submit">Criar Loja</SubmitButton>
+                </ContainerButton>
             </form>
         </Modal>
     );

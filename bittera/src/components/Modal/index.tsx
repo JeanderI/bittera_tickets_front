@@ -1,7 +1,7 @@
 import { createPortal } from "react-dom";
-/* import { CloseButton, CloseDiv, Container } from "./styles"; */
+import { CloseButton, CloseDiv, Container } from "./styles";
 import { ReactNode, useEffect, useRef } from "react";
-/* import { IoMdCloseCircle } from "react-icons/io"; */
+import { IoMdCloseCircle } from "react-icons/io";
 interface ModalProps {
 	toggleModal: () => void;
 	blockClosing?: boolean;
@@ -38,18 +38,18 @@ export const Modal = ({ toggleModal, children, blockClosing }: ModalProps) => {
 	};
 
 	return createPortal(
-		<div>
+		<Container>
 			<div ref={ref}>
 				{!blockClosing && (
-					<div>
-						<div onClick={handleClose}>
-							X
-						</div>
-					</div>
+					<CloseDiv>
+						<CloseButton onClick={handleClose}>
+							<IoMdCloseCircle />
+						</CloseButton>
+					</CloseDiv>
 				)}
 				{children}
 			</div>
-		</div>,
+		</Container>,
 		document.body
 	);
 };

@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { StoreList } from "../../components/Store/StoreList";
 import { ModalAddStore } from "../../components/Store/CreateStore"; 
+import logo from "../../assets/LogoBittera.jpg"
+import { GiExitDoor } from "react-icons/gi";
+import { Container } from "../../components/Container/styles";
+import { Header } from "../../components/Header/styles";
 
 interface Store {
   id: string;
@@ -29,16 +33,22 @@ export const Store = () => {
     })();
   }, []);
   return (
-    <main>
-       {isOpenStoreModal && (
-        <ModalAddStore
-          toggleStoreModal={toggleStoreModal}
-          setStores={setStores}
-        />
-      )}
-      <h1>stores</h1>
-      <StoreList stores={stores} 
-      toggleModal={toggleStoreModal}/>
-    </main>
+    <Container>
+      <Header>
+        <img src={logo} alt="" />
+        <button><GiExitDoor /></button>
+      </Header>
+      <main>
+        {isOpenStoreModal && (
+          <ModalAddStore
+            toggleStoreModal={toggleStoreModal}
+            setStores={setStores}
+          />
+        )}
+        <StoreList stores={stores} 
+        toggleModal={toggleStoreModal}/>
+      </main>
+    </Container>
+    
   );
 };

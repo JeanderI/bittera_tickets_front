@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { SystemList } from "../../components/System/SystemList";
 import { ModalAddSystem } from "../../components/System/ModaladdSystem";
+import { Container } from "../../components/Container/styles";
+import { Header } from "../../components/Header/styles";
+import { GiExitDoor } from "react-icons/gi";
+import logo from "../../assets/LogoBittera.jpg"
 
 export interface System {
     id: string;
@@ -27,18 +31,24 @@ export const System = () => {
     }, []);
 
     return (
-        <main>
-            {isOpenSystemModal && (
-                <ModalAddSystem
-                    toggleSystemModal={toggleSystemModal}
-                    setSystems={setSystems}
+        <Container>
+            <Header>
+                <img src={logo} alt="" />
+                <button><GiExitDoor /></button>
+            </Header>
+            <main>
+                {isOpenSystemModal && (
+                    <ModalAddSystem
+                        toggleSystemModal={toggleSystemModal}
+                        setSystems={setSystems}
+                    />
+                )}
+                <SystemList
+                    systems={systems}
+                    toggleModal={toggleSystemModal}
                 />
-            )}
-            <h1>Sistemas</h1>
-            <SystemList
-                systems={systems}
-                toggleModal={toggleSystemModal}
-            />
-        </main>
+            </main>
+        </Container>
+        
     );
 };
