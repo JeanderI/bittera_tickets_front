@@ -5,6 +5,7 @@ import { Register } from "../pages/register";
 import { Store } from "../pages/store";
 import { Manager } from "../pages/manager";
 import { System } from "../pages/system";
+import { NotFound } from "../pages/notFound";
 
 export const RoutesMain = () => {
 	return (
@@ -16,5 +17,6 @@ export const RoutesMain = () => {
 		<Route path="/gerentes" element={<Manager/>} />
 		<Route path="/register" element={<Register/>} />
 		<Route path="/sistemas" element={<System/>} />
-
-	</Routes>)}
+		<Route path="*" element={<NotFound />} />
+	</Routes>
+)}
