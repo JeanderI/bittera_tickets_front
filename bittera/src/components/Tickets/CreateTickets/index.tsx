@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { Store, Ticket } from "../../../pages/dashboard";
 import { Create } from "./validation";
 import { Modal } from "../../Modal";
+import { ContainerButton, FormGroup, Input, Label, Select, SubmitButton } from "../../Store/CreateStore/style";
 
 
 interface ModalAddTicketProps {
@@ -67,7 +68,7 @@ export const ModalAddTicket = ({
           Authorization: `Bearer ${token}`,
         },
       };
-      console.log("Configuração de headers:", config);
+      
       const storeId = watch("storeId");
 
       const url = `/ticket/${storeId}`;
@@ -93,9 +94,9 @@ export const ModalAddTicket = ({
   return (
     <Modal toggleModal={toggleTicketModal}>
       <form onSubmit={handleSubmit(createTicket)}>
-        <div>
-          <label htmlFor="store">Loja</label>
-          <select
+        <FormGroup>
+          <Label htmlFor="store">Loja</Label>
+          <Select
             id="store"
             {...register("storeId", { required: "A loja é obrigatória" })}
             onChange={(e) =>
@@ -108,25 +109,25 @@ export const ModalAddTicket = ({
                 {store.name}
               </option>
             ))}
-          </select>
+          </Select>
 
           {errors.storeId && <span>{errors.storeId.message}</span>}
-        </div>
+        </FormGroup>
 
-        <div>
-          <label htmlFor="title">Título</label>
-          <input
+        <FormGroup>
+          <Label htmlFor="title">Título</Label>
+          <Input
             type="text"
             id="title"
             {...register("title", { required: "Título é obrigatório" })}
             placeholder="Insira o título"
           />
           {errors.title && <span>{errors.title.message}</span>}
-        </div>
+        </FormGroup>
 
-        <div>
-          <label htmlFor="description">Descrição</label>
-          <input
+        <FormGroup>
+          <Label htmlFor="description">Descrição</Label>
+          <Input
             type="text"
             id="description"
             {...register("description", {
@@ -135,53 +136,53 @@ export const ModalAddTicket = ({
             placeholder="Insira a descrição"
           />
           {errors.description && <span>{errors.description.message}</span>}
-        </div>
+        </FormGroup>
 
-        <div>
-          <label htmlFor="date">Data</label>
-          <input
+        <FormGroup>
+          <Label htmlFor="date">Data</Label>
+          <Input
             type="text"
             id="date"
             {...register("date", { required: "Data é obrigatória" })}
           />
           {errors.date && <span>{errors.date.message}</span>}
-        </div>
+        </FormGroup>
 
-        <div>
-          <label htmlFor="end_date">Data Final</label>
-          <input
+        <FormGroup>
+          <Label htmlFor="end_date">Data Final</Label>
+          <Input
             type="text"
             id="end_date"
             {...register("end_date", { required: "Data final é obrigatória" })}
           />
           {errors.end_date && <span>{errors.end_date.message}</span>}
-        </div>
+        </FormGroup>
 
-        <div>
-          <label htmlFor="type">Tipo</label>
-          <input
+        <FormGroup>
+          <Label htmlFor="type">Tipo</Label>
+          <Input
             type="text"
             id="type"
             {...register("type", { required: "Tipo é obrigatório" })}
             placeholder="Insira o tipo"
           />
           {errors.type && <span>{errors.type.message}</span>}
-        </div>
+        </FormGroup>
 
-        <div>
-          <label htmlFor="status">status</label>
-          <input
+        <FormGroup>
+          <Label htmlFor="status">status</Label>
+          <Input
             type="checkbox"
             id="status"
             {...register("status", { required: "Suporte é obrigatório" })}
             placeholder="Insira a mensagem de ajuda"
           />
           {errors.status && <span>{errors.status.message}</span>}
-        </div>
+        </FormGroup>
 
-        <div>
-          <button type="submit">Cadastrar</button>
-        </div>
+        <ContainerButton>
+          <SubmitButton type="submit">Criar ticket</SubmitButton>
+        </ContainerButton>
       </form>
     </Modal>
   );

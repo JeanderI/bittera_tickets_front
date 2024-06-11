@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { Modal } from "../../Modal";
 import { Manager } from "../../../pages/manager";
 import { CreateManager } from "./validation.tsx";
+import { FormGroup, Input, Label } from "../../Store/CreateStore/style.ts";
 
 interface ModalAddManagerProps {
     toggleManagerModal: () => void;
@@ -73,27 +74,27 @@ export const ModalAddManager = ({
     return (
         <Modal toggleModal={toggleManagerModal}>
             <form onSubmit={handleSubmit(createManager)}>
-                <div>
-                    <label htmlFor="name">Nome</label>
-                    <input
+                <FormGroup>
+                    <Label htmlFor="name">Nome</Label>
+                    <Input
                         type="text"
                         id="name"
                         {...register("name")}
                         placeholder="Insira o nome"
                     />
                     {errors.name && <span>{errors.name.message}</span>}
-                </div>
+                </FormGroup>
 
-                <div>
-                    <label htmlFor="phone">Telefone</label>
-                    <input
+                <FormGroup>
+                    <Label htmlFor="phone">Telefone</Label>
+                    <Input
                         type="text"
                         id="phone"
                         {...register("phone")}
                         placeholder="Insira o telefone"
                     />
                     {errors.phone && <span>{errors.phone.message}</span>}
-                </div>
+                </FormGroup>
                 
                 <button type="submit">Criar Gerente</button>
             </form>

@@ -1,69 +1,73 @@
-/* import
-.login-container {
+import styled from "styled-components";
+
+export const Container = styled.div`
+	width: 100vw;
+	height: 100vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 100vh;
-	background-color: #f0f0f0;
-}
+`
 
-.login-form {
-	background: white;
-	padding: 2rem;
-	border-radius: 8px;
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-	width: 300px;
-}
+export const ContainerLogin = styled.div`
+	background-color: var(--silver-2);
+	width: 90%;
+	height: 80%;
+	display: flex;
+	border-radius: 10px;
+	
+`
 
-h1 {
-	margin-bottom: 1.5rem;
-}
+export const Right = styled.div`
+	background-color: #101340;
+	width: 50%;
+	height: 97.5%;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 1%;
 
-.form-group {
-	margin-bottom: 1rem;
-}
+	img{
+		max-width: 100%;
 
-label {
-	display: block;
-	margin-bottom: 0.5rem;
-}
+	}
+`
 
-input {
+export const Left = styled.div`
+	width: 50%;
+	height: 100%;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`
+
+export const Form = styled.form`
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
 	width: 100%;
-	padding: 0.5rem;
-	margin-bottom: 0.5rem;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-}
+	height: 70%;
+	justify-content: center;
 
-.error-message {
-	color: red;
-	font-size: 0.875rem;
-}
+	h2 {
+		margin-bottom: 30px;
+	}
 
-button {
-	width: 100%;
-	padding: 0.75rem;
-	background-color: #007bff;
-	color: white;
+`
+
+export const InputLogin = styled.input`
 	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-}
+	padding: 10px;
+	border-radius: 3px;
+`
 
-button:hover {
-	background-color: #0056b3;
-}
-
-.register-link {
-	display: block;
-	text-align: center;
-	margin-top: 1rem;
-	color: #007bff;
-	text-decoration: none;
-}
-
-.register-link:hover {
-	text-decoration: underline;
-}
- */
+export const ButtonLogin = styled.button`
+	padding: 10px;
+	margin-top: 20px;
+	border-radius: 3px;
+	border: none;
+	width: 30%;
+`

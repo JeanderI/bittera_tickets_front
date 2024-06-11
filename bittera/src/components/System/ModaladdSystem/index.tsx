@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react"; 
 import { Modal } from "../../Modal";
 import { System } from "../../../pages/system/index.tsx";
+import { ContainerButton, FormGroup, Input, Label, SubmitButton } from "../../Store/CreateStore/style.ts";
 
 
 
@@ -74,29 +75,31 @@ export const ModalAddSystem = ({
     return (
         <Modal toggleModal={toggleSystemModal}>
             <form onSubmit={handleSubmit(createSystem)}>
-                <div>
-                    <label htmlFor="system">Sistema</label>
-                    <input
+                <FormGroup>
+                    <Label htmlFor="system">Sistema</Label>
+                    <Input
                         type="text"
                         id="system"
                         {...register("system")}
                         placeholder="Insira o nome"
                     />
                     {errors.system && <span>{errors.system.message}</span>}
-                </div>
+                </FormGroup>
 
-                <div>
-                    <label htmlFor="icon">Imagem</label>
-                    <input
+                <FormGroup>
+                    <Label htmlFor="icon">Imagem</Label>
+                    <Input
                         type="text"
                         id="icon"
                         {...register("icon")}
                         placeholder="Insira o telefone"
                     />
                     {errors.icon && <span>{errors.icon.message}</span>}
-                </div>
+                </FormGroup>
                 
-                <button type="submit">Criar Gerente</button>
+                <ContainerButton>
+                    <SubmitButton type="submit">Criar ticket</SubmitButton>
+                </ContainerButton>
             </form>
         </Modal>
     );

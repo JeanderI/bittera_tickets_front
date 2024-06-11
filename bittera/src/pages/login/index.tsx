@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { LoginData, schema } from "./validator";
 import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
+import { ButtonLogin, Container, ContainerLogin, Form, InputLogin, Left, Right } from "./styles";
+import logo from "../../assets/Bittera_avatar (3).png"
 
 export const Login = () => {
 	const { signIn } = useAuth();
@@ -15,40 +17,46 @@ export const Login = () => {
 	});
 
 	return (
-		<div className="login-container">
-			<div className="login-form">
-				<h1>Login</h1>
-				<form onSubmit={handleSubmit(signIn)}>
-					<div className="form-group">
-						<label htmlFor="email">Usuário</label>
-						<input
-							type="text"
-							id="email"
-							{...register("email")}
-							placeholder="Insira seu nome de usuário"
-						/>
-						{errors.email && (
-							<span className="error-message">{errors.email.message}</span>
-						)}
-					</div>
-					<div className="form-group">
-						<label htmlFor="password">Senha</label>
-						<input
-							type="password"
-							id="password"
-							{...register("password")}
-							placeholder="Insira sua senha"
-						/>
-						{errors.password && (
-							<span className="error-message">{errors.password.message}</span>
-						)}
-					</div>
-					<button type="submit">Entrar</button>
-					<Link to={"/register"}>
-						<span className="register-link">Ainda não possui uma conta?</span>
-					</Link>
-				</form>
-			</div>
-		</div>
+		<Container>
+			<ContainerLogin>
+				<Right>
+					<img src={logo} alt="" />
+				</Right>
+				<Left>	
+					<Form onSubmit={handleSubmit(signIn)}>
+						<h2>Bem vindo de volta</h2>
+						<div>
+							
+							<InputLogin
+								type="text"
+								id="email"
+								{...register("email")}
+								placeholder="Insira seu nome de usuário"
+							/>
+							{errors.email && (
+								<span>{errors.email.message}</span>
+							)}
+						</div>
+						<div >
+							
+							<InputLogin
+								type="password"
+								id="password"
+								{...register("password")}
+								placeholder="Insira sua senha"
+							/>
+							{errors.password && (
+								<span>{errors.password.message}</span>
+							)}
+						</div>
+						<ButtonLogin type="submit">Entrar</ButtonLogin>
+						<Link to={"/register"}>
+							<span >Ainda não possui uma conta?</span>
+						</Link>
+					</Form>
+				</Left>
+				
+			</ContainerLogin>
+		</Container>
 	);
 };
