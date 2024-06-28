@@ -3,9 +3,7 @@ import { api } from "../../services/api";
 import { ManagerList } from "../../components/Manager/ManagerList";
 import { ModalAddManager } from "../../components/Manager/ManagerCreate";
 import { Container } from "../../components/Container/styles";
-import { Header } from "../../components/Header/styles";
-import { GiExitDoor } from "react-icons/gi";
-import logo from "../../assets/LogoBittera.jpg"
+import { Header } from "../../components/Header";
 
 export interface Manager {
   id: string;
@@ -31,10 +29,8 @@ export const Manager = () => {
 
   return (
     <Container>
-      <Header>
-        <img src={logo} alt="" />
-        <button><GiExitDoor /></button>
-      </Header>
+      <Header/>
+      
       <main>
       {isOpenManagerModal && (
         <ModalAddManager

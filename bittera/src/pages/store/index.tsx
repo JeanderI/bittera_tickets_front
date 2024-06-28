@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { StoreList } from "../../components/Store/StoreList";
 import { ModalAddStore } from "../../components/Store/CreateStore"; 
-import logo from "../../assets/LogoBittera.jpg"
-import { GiExitDoor } from "react-icons/gi";
 import { Container } from "../../components/Container/styles";
-import { Header } from "../../components/Header/styles";
+import { Header } from "../../components/Header";
+
 
 interface Store {
   id: string;
@@ -34,10 +33,8 @@ export const Store = () => {
   }, []);
   return (
     <Container>
-      <Header>
-        <img src={logo} alt="" />
-        <button><GiExitDoor /></button>
-      </Header>
+      <Header/>
+       
       <main>
         {isOpenStoreModal && (
           <ModalAddStore

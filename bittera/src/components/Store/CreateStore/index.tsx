@@ -40,7 +40,7 @@ export const ModalAddStore = ({
                     Authorization: `Bearer ${token}`,
                 },
             };
-
+            console.log(data)
             const response = await api.post("/store", data, config);
 
             if (response.status === 201) {
@@ -99,8 +99,8 @@ export const ModalAddStore = ({
                 <FormGroup>
                 <Label htmlFor="status">Status</Label>
                     <Select id="status" {...register("status")}>
-                        <option value="ativo">Ativo</option>
-                        <option value="inativo">Inativo</option>
+                        <option value="Ativo">Ativo</option>
+                        <option value="Inativo">Inativo</option>
                         <option value="Em manutencao">Em manutencao</option>
                     </Select>
                     {errors.status && <span>{errors.status.message}</span>}
@@ -126,6 +126,16 @@ export const ModalAddStore = ({
 						placeholder="Insira o CNPJ"
 					/>
 					{errors.cnpj && <span>{errors.cnpj.message}</span>}
+				</FormGroup>
+                <FormGroup>
+					<Label htmlFor="sistema">Sistema</Label>
+					<Input
+						type="text"
+						id="sistema"
+						{...register("system")}
+						placeholder="Insira o id sistema"
+					/>
+					{errors.system && <span>{errors.system.message}</span>}
 				</FormGroup>
                 <ContainerButton>
                     <SubmitButton type="submit">Criar Loja</SubmitButton>

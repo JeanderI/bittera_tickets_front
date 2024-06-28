@@ -10,7 +10,6 @@ export const schema = z.object({
   date: z.string(),
   end_date: z.string(),
   type: z.string(),
-  status: z.boolean(), // Deveria ser boolean
   support: z.string(),
   storeId: z.string().nonempty("A loja é obrigatória"),
 });

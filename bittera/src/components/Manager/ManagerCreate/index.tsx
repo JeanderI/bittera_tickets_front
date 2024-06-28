@@ -3,15 +3,20 @@ import { api } from "../../../services/api";
 import { useForm } from "react-hook-form";
 import { schema } from "./validation.tsx";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react"; 
+import { useEffect, useState } from "react";
 import { Modal } from "../../Modal";
 import { Manager } from "../../../pages/manager";
 import { CreateManager } from "./validation.tsx";
-import { FormGroup, Input, Label } from "../../Store/CreateStore/style.ts";
+import { ContainerButton, FormGroup, Input, Label, SubmitButton, Select } from "../../Store/CreateStore/style.ts";
 
 interface ModalAddManagerProps {
     toggleManagerModal: () => void;
     setManagers: React.Dispatch<React.SetStateAction<Manager[]>>;
+}
+
+interface Store {
+    id: string;
+    name: string;
 }
 
 export const ModalAddManager = ({
@@ -25,6 +30,8 @@ export const ModalAddManager = ({
     } = useForm<CreateManager>({
         resolver: zodResolver(schema),
     });
+
+    const [stores, setStores] = useState<Store[]>([]);
 
     const createManager = async (data: CreateManager) => {
         try {
@@ -40,8 +47,8 @@ export const ModalAddManager = ({
                     Authorization: `Bearer ${token}`,
                 },
             };
-
-            const response = await api.post("/manager", data, config);
+            console.log(data)
+            const response = await api.post(`/manager/${data.storeId}`, data, config);
 
             if (response.status === 201) {
                 setManagers((previousManagers) => [response.data, ...previousManagers]);
@@ -71,6 +78,19 @@ export const ModalAddManager = ({
         }
     }, [errors]);
 
+    useEffect(() => {
+        const fetchStores = async () => {
+            try {
+                const response = await api.get("/store"); 
+                setStores(response.data);
+            } catch (error: unknown) {
+                toast.error("Erro ao buscar lojas: " + error);
+            }
+        };
+
+        fetchStores();
+    }, []);
+
     return (
         <Modal toggleModal={toggleManagerModal}>
             <form onSubmit={handleSubmit(createManager)}>
@@ -95,8 +115,23 @@ export const ModalAddManager = ({
                     />
                     {errors.phone && <span>{errors.phone.message}</span>}
                 </FormGroup>
+
+                <FormGroup>
+                    <Label htmlFor="store">Loja</Label>
+                    <Select id="store" {...register("storeId")}>
+                        <option value="">Selecione uma loja</option>
+                        {stores.map((store) => (
+                            <option key={store.id} value={store.id}>
+                                {store.name}
+                            </option>
+                        ))}
+                    </Select>
+                    {errors.storeId && <span>{errors.storeId.message}</span>}
+                </FormGroup>
                 
-                <button type="submit">Criar Gerente</button>
+                <ContainerButton>
+                    <SubmitButton type="submit">Novo gerente</SubmitButton>
+                </ContainerButton>
             </form>
         </Modal>
     );

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Header = styled.header`
+export const HeaderContainer = styled.header`
     background-color: white;
     height: 50px;
     display: flex;
@@ -18,6 +18,20 @@ export const Header = styled.header`
         svg{
             width: 50px;
             height: 30px;
+        }
+    }
+
+    ul{
+        list-style: none;
+        display: flex;
+        align-items: center;
+        width: 70%;
+        justify-content: space-around;
+
+        a{
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
         }
     }
 

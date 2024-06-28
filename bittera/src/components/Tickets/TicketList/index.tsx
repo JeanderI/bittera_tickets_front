@@ -35,11 +35,12 @@ export const TicketList: React.FC<TicketListProps> = ({
                    
                 </ContainerMenu>
                 <ListTags>
+                    <p>Titulo ticket</p>
                     <p>Nome</p>
-                    <p>Cidade</p>
+                    <p>Data</p>
+                    <p>suporte</p>
                     <p>CNPJ</p>
-                    <p>Gerente</p>
-                    <p>Status</p>
+                    
                 </ListTags>
             
                 {tickets.length > 0 ? (
@@ -47,18 +48,13 @@ export const TicketList: React.FC<TicketListProps> = ({
                         {tickets.map((ticket) => (
                             <Item key={ticket.id}>
                                 <h3>{ticket.title}</h3>
-                                <p>{ticket.description}</p>
-                                <p>{ticket.date}</p>
-                                <p>{ticket.end_date}</p>
-                                <p>{ticket.type ? "Tipo A" : "Tipo B"}</p>
-                                <p>{ticket.support}</p>
-                                <p>{ticket.user.email}</p>
-                                <p>{ticket.user.name}</p>
-                                <p>{ticket.store.city}</p>
-                                <p>{ticket.store.cnpj}</p>
                                 <p>{ticket.store.name}</p>
-                                <p>{ticket.store.owner}</p>
-                                <p>{ticket.store.status}</p>
+                                <p>{ticket.date}</p>                           
+                                <p>{ticket.support}</p>
+                                <p>{ticket.store.cnpj}</p>
+                                
+                                
+                                
                              {/*    <div>
                                     <button type="button" onClick={() => onEditTicket(ticket.id)}>
                                         Editar

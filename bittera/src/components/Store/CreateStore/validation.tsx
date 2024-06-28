@@ -6,6 +6,7 @@ export const schema = z.object({
     status: z.string(),
     owner: z.string(),
     cnpj: z.string(),
+    system: z.string()
 })
 
 export type CreateStore = z.infer<typeof schema>

@@ -6,9 +6,7 @@ import { ModalEditTicket } from "../../components/Tickets/ModalEditTicket";
 import { toast } from "react-toastify";
 import { AuthService } from "../../contexts/UserContext";
 import { Container } from "../../components/Container/styles";
-import { Header } from "../store/styled";
-import { GiExitDoor } from "react-icons/gi";
-import logo from "../../assets/LogoBittera.jpg"
+import { Header } from "../../components/Header";
 
 interface User {
   id: string;
@@ -91,11 +89,7 @@ export const Dashboard = () => {
 
   return (
     <Container>
-      <Header>
-        <img src={logo} alt="" />
-        <button><GiExitDoor /></button>
-      </Header>
-
+      <Header/>
       
       <main>
         {isOpenTicketModal && (

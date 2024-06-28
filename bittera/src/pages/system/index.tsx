@@ -3,9 +3,8 @@ import { api } from "../../services/api";
 import { SystemList } from "../../components/System/SystemList";
 import { ModalAddSystem } from "../../components/System/ModaladdSystem";
 import { Container } from "../../components/Container/styles";
-import { Header } from "../../components/Header/styles";
-import { GiExitDoor } from "react-icons/gi";
-import logo from "../../assets/LogoBittera.jpg"
+import { Header } from "../../components/Header";
+
 
 export interface System {
     id: string;
@@ -32,10 +31,8 @@ export const System = () => {
 
     return (
         <Container>
-            <Header>
-                <img src={logo} alt="" />
-                <button><GiExitDoor /></button>
-            </Header>
+            <Header/>
+         
             <main>
                 {isOpenSystemModal && (
                     <ModalAddSystem

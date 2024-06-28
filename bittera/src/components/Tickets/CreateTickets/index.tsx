@@ -17,47 +17,19 @@ export const ModalAddTicket = ({
   toggleTicketModal,
   setTickets,
 }: ModalAddTicketProps) => {
-  const [stores, setStores] = useState<Store[]>([]);
+ 
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
-    watch, 
+    setValue, 
   } = useForm<Create>();
 
-  useEffect(() => {
-    const fetchStores = async () => {
-      try {
-        const token = localStorage.getItem("tickets:token");
-
-        if (!token) {
-          toast.error("Token não encontrado no localStorage");
-          return;
-        }
-
-        const config = {
-          headers: {
-            Authorization: `Bearer${token}`,
-          },
-        };
-
-        const response = await api.get("/store", config);
-        setStores(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar lojas:", error);
-        toast.error("Erro ao buscar lojas");
-      }
-    };
-
-    fetchStores();
-  }, []);
-
+  const [stores, setStores] = useState<Store[]>([]);
   const createTicket = async (data: Create) => {
     try {
       const token = localStorage.getItem("tickets:token");
-      console.log(token);
       if (!token) {
         toast.error("Token não encontrado no localStorage");
         return;
@@ -69,11 +41,9 @@ export const ModalAddTicket = ({
         },
       };
       
-      const storeId = watch("storeId");
+      const response = await api.post(`/ticket/${data.storeId}`, data, config);
 
-      const url = `/ticket/${storeId}`;
-      console.log(storeId);
-      const response = await api.post(url, data, config);
+      
 
       if (response.status === 201) {
         setTickets((previousTickets: Ticket[]) => [
@@ -90,6 +60,26 @@ export const ModalAddTicket = ({
       toast.error("Erro ao criar ticket");
     }
   };
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+        toast.error("Erro ao criar ticket. Por favor, verifique os campos.");
+    }
+  }, [errors]);
+
+
+  useEffect(() => {
+    const fetchStores = async () => {
+        try {
+            const response = await api.get("/store"); 
+            setStores(response.data);
+        } catch (error: unknown) {
+            toast.error("Erro ao buscar lojas: " + error);
+        }
+    };
+
+    fetchStores();
+}, []);
 
   return (
     <Modal toggleModal={toggleTicketModal}>
@@ -149,6 +139,16 @@ export const ModalAddTicket = ({
         </FormGroup>
 
         <FormGroup>
+          <Label htmlFor="date">Suporte</Label>
+          <Input
+            type="text"
+            id="support"
+            {...register("support", { required: "Data é obrigatória" })}
+          />
+          {errors.support && <span>{errors.support.message}</span>}
+        </FormGroup>
+
+        <FormGroup>
           <Label htmlFor="end_date">Data Final</Label>
           <Input
             type="text"
@@ -160,24 +160,21 @@ export const ModalAddTicket = ({
 
         <FormGroup>
           <Label htmlFor="type">Tipo</Label>
-          <Input
-            type="text"
-            id="type"
-            {...register("type", { required: "Tipo é obrigatório" })}
-            placeholder="Insira o tipo"
-          />
-          {errors.type && <span>{errors.type.message}</span>}
-        </FormGroup>
+  
+          <Select id="type" {...register("type")}>
+            <option value="Desempenho">Desempenho</option>
+            <option value="Estoque">Estoque</option>
+            <option value="Financeiro">Financeiro</option>
+            <option value="Integração">Integração</option>
+            <option value="Relatórios">Relatórios</option>
+            <option value="Segurança">Segurança</option>
+            <option value="Suporte">Suporte</option>
+            <option value="treinamento">treinamento</option>
+            <option value="Usabilidade">Usabilidade</option>
+            <option value="outros">outros</option>
 
-        <FormGroup>
-          <Label htmlFor="status">status</Label>
-          <Input
-            type="checkbox"
-            id="status"
-            {...register("status", { required: "Suporte é obrigatório" })}
-            placeholder="Insira a mensagem de ajuda"
-          />
-          {errors.status && <span>{errors.status.message}</span>}
+          </Select>
+          {errors.type && <span>{errors.type.message}</span>}
         </FormGroup>
 
         <ContainerButton>

@@ -81,7 +81,7 @@ export const ModalAddSystem = ({
                         type="text"
                         id="system"
                         {...register("system")}
-                        placeholder="Insira o nome"
+                        placeholder="Insira o nome do sistema"
                     />
                     {errors.system && <span>{errors.system.message}</span>}
                 </FormGroup>
@@ -92,13 +92,13 @@ export const ModalAddSystem = ({
                         type="text"
                         id="icon"
                         {...register("icon")}
-                        placeholder="Insira o telefone"
+                        placeholder="Insira a url da imagem"
                     />
                     {errors.icon && <span>{errors.icon.message}</span>}
                 </FormGroup>
                 
                 <ContainerButton>
-                    <SubmitButton type="submit">Criar ticket</SubmitButton>
+                    <SubmitButton type="submit">Novo sistema</SubmitButton>
                 </ContainerButton>
             </form>
         </Modal>
