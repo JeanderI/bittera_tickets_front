@@ -3,36 +3,37 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "react-toastify";
-import { System } from "../../../pages/system";
-import { UpdateSystemData, schema } from "./validations";
+import { Manager } from "../../../pages/manager";
+import { UpdateManagerData, schema } from "./validation.tsx";
 import { AuthService } from "../../../contexts/UserContext";
 import { api } from "../../../services/api";
 import { Modal } from "../../Modal";
 import {
   Button,
+  ErrorMessage,
   FormContainer,
   Input,
   Label,
 } from "../../Tickets/ModalEditTicket/styles";
 import { ContainerButton } from "../../Section/styles";
 
-interface ModalEditSystemProps {
-  toggleSystemEdit: () => void;
-  setSystems: Dispatch<SetStateAction<System[]>>;
-  systemId: string;
+interface ModalEditManagerProps {
+  toggleManagerEdit: () => void;
+  setManagers: Dispatch<SetStateAction<Manager[]>>;
+  managerId: string;
 }
 
-export const ModalEditSystem: React.FC<ModalEditSystemProps> = ({
-  toggleSystemEdit,
-  setSystems,
-  systemId,
+export const ModalEditManager: React.FC<ModalEditManagerProps> = ({
+  toggleManagerEdit,
+  setManagers,
+  managerId,
 }) => {
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<UpdateSystemData>({
+  } = useForm<UpdateManagerData>({
     resolver: zodResolver(schema),
   });
 
@@ -40,7 +41,7 @@ export const ModalEditSystem: React.FC<ModalEditSystemProps> = ({
     const fetchExistingData = async () => {
       try {
         const token = AuthService.getToken();
-        const response = await api.get(`/system/${systemId}`, {
+        const response = await api.get(`/manager/${managerId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -48,7 +49,7 @@ export const ModalEditSystem: React.FC<ModalEditSystemProps> = ({
         const { data } = response;
         Object.keys(data).forEach((key) => {
           if (key in schema.shape) {
-            setValue(key as keyof UpdateSystemData, data[key]);
+            setValue(key as keyof UpdateManagerData, data[key]);
           }
         });
       } catch (error) {
@@ -58,27 +59,29 @@ export const ModalEditSystem: React.FC<ModalEditSystemProps> = ({
     };
 
     fetchExistingData();
-  }, [systemId, setValue]);
+  }, [managerId, setValue]);
 
-  const updateSystem = async (data: UpdateSystemData) => {
+  const updateManager = async (data: UpdateManagerData) => {
     const token = AuthService.getToken();
 
     try {
-      const response = await api.patch(`/system/${systemId}`, data, {
+      const response = await api.patch(`/manager/${managerId}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.status === 200) {
-        setSystems((systems) =>
-          systems.map((system) =>
-            system.id === systemId ? { ...system, ...response.data } : system
+        setManagers((managers) =>
+          managers.map((manager) =>
+            manager.id === managerId
+              ? { ...manager, ...response.data }
+              : manager
           )
         );
 
-        toast.success("Sistema atualizado com sucesso");
-        toggleSystemEdit();
+        toast.success("Gerente atualizado com sucesso");
+        toggleManagerEdit();
       } else {
         handleError(response);
       }
@@ -89,17 +92,17 @@ export const ModalEditSystem: React.FC<ModalEditSystemProps> = ({
 
   const handleError = (error: unknown) => {
     if (error instanceof Error) {
-      toast.error("Erro ao atualizar o sistema: " + error.message);
+      toast.error("Erro ao atualizar o gerente: " + error.message);
     } else if (error && typeof error === "object" && "response" in error) {
       const err = error as { response: { status: number; data: string } };
       if (err.response.status === 409) {
         toast.error(
-          "Erro ao atualizar o sistema: Conflito. O sistema já existe."
+          "Erro ao atualizar o gerente: Conflito. O gerente já existe."
         );
       } else if (err.response.status === 403) {
-        toast.error("Erro ao atualizar o sistema: Acesso proibido.");
+        toast.error("Erro ao atualizar o gerente: Acesso proibido.");
       } else {
-        toast.error("Erro ao atualizar o sistema: " + err.response.data);
+        toast.error("Erro ao atualizar o gerente: " + err.response.data);
       }
     } else {
       toast.error("Ocorreu um erro desconhecido.");
@@ -109,35 +112,35 @@ export const ModalEditSystem: React.FC<ModalEditSystemProps> = ({
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       toast.error(
-        "Erro ao atualizar o sistema. Por favor, verifique os campos."
+        "Erro ao atualizar o gerente. Por favor, verifique os campos."
       );
     }
   }, [errors]);
 
   return (
-    <Modal toggleModal={toggleSystemEdit}>
-      <FormContainer onSubmit={handleSubmit(updateSystem)}>
+    <Modal toggleModal={toggleManagerEdit}>
+      <FormContainer onSubmit={handleSubmit(updateManager)}>
         <div>
-          <Label htmlFor="system">Nome do Sistema</Label>
+          <Label htmlFor="name">Nome</Label>
           <Input
             type="text"
-            id="system"
-            {...register("system")}
-            placeholder="Digite o nome do sistema"
+            id="name"
+            {...register("name")}
+            placeholder="Digite o Nome"
           />
-          {errors.system && <span>{errors.system.message}</span>}
-        </div>
-        <div>
-          <Label htmlFor="system">icon</Label>
-          <Input
-            type="text"
-            id="icon"
-            {...register("icon")}
-            placeholder="Digite o nome do sistema"
-          />
-          {errors.icon && <span>{errors.icon.message}</span>}
+          {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
         </div>
 
+        <div>
+          <Label htmlFor="phone">Telefone</Label>
+          <Input
+            type="text"
+            id="phone"
+            {...register("phone")}
+            placeholder="Digite a Telefone"
+          />
+          {errors.phone && <ErrorMessage>{errors.phone.message}</ErrorMessage>}
+        </div>
         <ContainerButton>
           <Button type="submit">Atualizar</Button>
         </ContainerButton>

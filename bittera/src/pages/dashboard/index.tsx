@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { AuthService } from "../../contexts/UserContext";
 import { Container } from "../../components/Container/styles";
 import { Header } from "../../components/Header";
+import ModalViewTicket from "../../components/Tickets/ModalviewTicket";
 
 interface User {
   id: string;
@@ -40,14 +41,28 @@ export interface Ticket {
 export const Dashboard = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [ticketItemId, setTicketItemId] = useState("");
+  const [viewedTicket, setViewedTicket] = useState<Ticket | null>(null);
 
   const [isOpenTicketModal, setIsOpenTicketModal] = useState(false);
   const toggleTicketModal = () => setIsOpenTicketModal(!isOpenTicketModal);
 
   const [isOpenTicketEdit, setIsOpenTicketEdit] = useState(false);
   const toggleTicketEdit = (id: string) => {
-    setIsOpenTicketEdit(!isOpenTicketEdit);
+    setIsOpenTicketEdit(true);
     setTicketItemId(id);
+  };
+
+  const closeTicketEdit = () => setIsOpenTicketEdit(false);
+
+  const onViewTicket = (ticketId: string) => {
+    const ticket = tickets.find((ticket) => ticket.id === ticketId);
+    setViewedTicket(ticket || null);
+  };
+
+  const confirmDeleteTicket = (ticketId: string) => {
+    if (window.confirm("Tem certeza que deseja excluir este ticket?")) {
+      deleteTicket(ticketId);
+    }
   };
 
   const deleteTicket = async (ticketId: string) => {
@@ -89,8 +104,8 @@ export const Dashboard = () => {
 
   return (
     <Container>
-      <Header/>
-      
+      <Header />
+
       <main>
         {isOpenTicketModal && (
           <ModalAddTicket
@@ -101,18 +116,27 @@ export const Dashboard = () => {
 
         {isOpenTicketEdit && (
           <ModalEditTicket
-            toggleTicketEdit={() => toggleTicketEdit(ticketItemId)}
+            toggleTicketEdit={closeTicketEdit}
             setTickets={setTickets}
             ticketId={ticketItemId}
           />
         )}
 
-        
+        {viewedTicket && (
+          <ModalViewTicket
+            ticket={viewedTicket}
+            onClose={() => setViewedTicket(null)}
+            onEditTicket={toggleTicketEdit}
+            onDeleteTicket={confirmDeleteTicket}
+          />
+        )}
+
         <TicketList
           toggleModal={toggleTicketModal}
           tickets={tickets}
-          onEditTicket={toggleTicketEdit}
-          onDeleteTicket={deleteTicket}
+          onViewTicket={onViewTicket}
+          onUpdateTicket={toggleTicketEdit}
+          onDeleteTicket={confirmDeleteTicket}
         />
       </main>
     </Container>

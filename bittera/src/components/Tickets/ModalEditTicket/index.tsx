@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Modal } from "../../Modal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -7,6 +8,9 @@ import { UpdateTicketData, schema } from "./validation";
 import { toast } from "react-toastify";
 import { AuthService } from "../../../contexts/UserContext";
 import { Ticket } from "../../../pages/dashboard";
+import { Button, ErrorMessage, FormContainer, Input, Label } from "./styles";
+import { ContainerButton } from "../../Section/styles";
+import { Select } from "../../Store/CreateStore/styles";
 
 interface ModalEditTicketProps {
   toggleTicketEdit: () => void;
@@ -14,11 +18,11 @@ interface ModalEditTicketProps {
   ticketId: string;
 }
 
-export const ModalEditTicket = ({
+export const ModalEditTicket: React.FC<ModalEditTicketProps> = ({
   toggleTicketEdit,
   setTickets,
   ticketId,
-}: ModalEditTicketProps) => {
+}) => {
   const {
     register,
     handleSubmit,
@@ -27,8 +31,6 @@ export const ModalEditTicket = ({
   } = useForm<UpdateTicketData>({
     resolver: zodResolver(schema),
   });
-
-  const [ticketToEdit, setTicketToEdit] = useState<Ticket | null>(null);
 
   useEffect(() => {
     const fetchExistingData = async () => {
@@ -40,19 +42,21 @@ export const ModalEditTicket = ({
           },
         });
         const { data } = response;
-        setTicketToEdit(data);
         Object.keys(data).forEach((key) => {
-          setValue(key as keyof UpdateTicketData, data[key]);
+          if (key in schema.shape) {
+            setValue(key as keyof UpdateTicketData, data[key]);
+          }
         });
       } catch (error) {
         console.error("Error fetching existing data:", error);
+        handleError(error);
       }
     };
 
     fetchExistingData();
   }, [ticketId, setValue]);
 
-  const updateTask = async (data: UpdateTicketData) => {
+  const updateTicket = async (data: UpdateTicketData) => {
     const token = AuthService.getToken();
 
     try {
@@ -63,14 +67,13 @@ export const ModalEditTicket = ({
       });
 
       if (response.status === 200) {
-        setTickets((tickets) => {
-          const updatedList = tickets.map((item) =>
-            item.id === ticketId ? response.data : item
-          );
-          return updatedList;
-        });
+        setTickets((tickets) =>
+          tickets.map((ticket) =>
+            ticket.id === ticketId ? { ...ticket, ...response.data } : ticket
+          )
+        );
 
-        toast.success("Ticket updated successfully");
+        toast.success("Ticket atualizado com sucesso");
         toggleTicketEdit();
       } else {
         handleError(response);
@@ -82,132 +85,118 @@ export const ModalEditTicket = ({
 
   const handleError = (error: unknown) => {
     if (error instanceof Error) {
-      toast.error("Error updating ticket: " + error.message);
+      toast.error("Erro ao atualizar o ticket: " + error.message);
     } else if (error && typeof error === "object" && "response" in error) {
       const err = error as { response: { status: number; data: string } };
       if (err.response.status === 409) {
-        toast.error("Error updating ticket: Conflict. Ticket already exists.");
+        toast.error(
+          "Erro ao atualizar o ticket: Conflito. O ticket já existe."
+        );
       } else if (err.response.status === 403) {
-        toast.error("Error updating ticket: Access forbidden.");
+        toast.error("Erro ao atualizar o ticket: Acesso proibido.");
       } else {
-        toast.error("Error updating ticket: " + err.response.data);
+        toast.error("Erro ao atualizar o ticket: " + err.response.data);
       }
     } else {
-      toast.error("An unknown error occurred.");
-    }
-  };
-
-  const deleteTicket = async (ticketId: string) => {
-    const token = AuthService.getToken();
-
-    try {
-      const response = await api.delete(`/ticket/${ticketId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 204) {
-        setTickets((previousTickets) =>
-          previousTickets.filter((ticket) => ticket.id !== ticketId)
-        );
-        toast.success("Ticket deleted successfully");
-        toggleTicketEdit();
-      } else {
-        toast.error("Error deleting ticket");
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error("Error deleting ticket: " + error.message);
-      } else {
-        toast.error("Error deleting ticket: " + String(error));
-      }
+      toast.error("Ocorreu um erro desconhecido.");
     }
   };
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
-      toast.error("Error updating ticket. Please check the fields.");
+      toast.error(
+        "Erro ao atualizar o ticket. Por favor, verifique os campos."
+      );
     }
   }, [errors]);
 
   return (
     <Modal toggleModal={toggleTicketEdit}>
-      <form onSubmit={handleSubmit(updateTask)}>
+      <FormContainer onSubmit={handleSubmit(updateTicket)}>
         <div>
-          <label htmlFor="title">Title</label>
-          <input
+          <Label htmlFor="title">Título</Label>
+          <Input
             type="text"
             id="title"
             {...register("title")}
-            placeholder="Enter title"
+            placeholder="Digite o título"
           />
-          {errors.title && <span>{errors.title.message}</span>}
+          {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
         </div>
 
         <div>
-          <label htmlFor="description">Description</label>
-          <input
+          <Label htmlFor="description">Descrição</Label>
+          <Input
             type="text"
             id="description"
             {...register("description")}
-            placeholder="Enter description"
+            placeholder="Digite a descrição"
           />
-          {errors.description && <span>{errors.description.message}</span>}
+          {errors.description && (
+            <ErrorMessage>{errors.description.message}</ErrorMessage>
+          )}
         </div>
 
         <div>
-          <label htmlFor="date">Date</label>
-          <input
+          <Label htmlFor="date">Data</Label>
+          <Input
             type="text"
             id="date"
             {...register("date")}
-            placeholder="Enter date"
+            placeholder="Digite a data"
           />
-          {errors.date && <span>{errors.date.message}</span>}
+          {errors.date && <ErrorMessage>{errors.date.message}</ErrorMessage>}
         </div>
 
         <div>
-          <label htmlFor="end_date">End Date</label>
-          <input
+          <Label htmlFor="end_date">Data de Término</Label>
+          <Input
             type="text"
             id="end_date"
             {...register("end_date")}
-            placeholder="Enter end date"
+            placeholder="Digite a data de término"
           />
-          {errors.end_date && <span>{errors.end_date.message}</span>}
+          {errors.end_date && (
+            <ErrorMessage>{errors.end_date.message}</ErrorMessage>
+          )}
         </div>
 
         <div>
-          <label htmlFor="type">Type</label>
-          <input
-            type="text"
-            id="type"
-            {...register("type")}
-            placeholder="Enter type"
-          />
-          {errors.type && <span>{errors.type.message}</span>}
+          <Label htmlFor="type">Tipo</Label>
+          <Select id="type" {...register("type")}>
+            <option value="Desempenho">Desempenho</option>
+            <option value="Estoque">Estoque</option>
+            <option value="Financeiro">Financeiro</option>
+            <option value="Integração">Integração</option>
+            <option value="Relatórios">Relatórios</option>
+            <option value="Segurança">Segurança</option>
+            <option value="Suporte">Suporte</option>
+            <option value="treinamento">treinamento</option>
+            <option value="Usabilidade">Usabilidade</option>
+            <option value="outros">outros</option>
+          </Select>
+          {errors.type && <ErrorMessage>{errors.type.message}</ErrorMessage>}
         </div>
 
         <div>
-          <label htmlFor="support">Support</label>
-          <input
+          <Label htmlFor="support">Suporte</Label>
+          <Input
             type="text"
             id="support"
             {...register("support")}
-            placeholder="Enter support message"
+            placeholder="Digite o suporte"
           />
-          {errors.support && <span>{errors.support.message}</span>}
+          {errors.support && (
+            <ErrorMessage>{errors.support.message}</ErrorMessage>
+          )}
         </div>
 
-        <div>
-          <button type="submit">Update</button>
-        </div>
-        <div>
-          <button type="button" onClick={() => deleteTicket(ticketId)}>
-            Delete
-          </button>
-        </div>
-      </form>
+        <ContainerButton>
+          <Button type="submit">Atualizar</Button>
+        </ContainerButton>
+      </FormContainer>
     </Modal>
   );
 };
+
+export default ModalEditTicket;

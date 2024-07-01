@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 import { Store, Ticket } from "../../../pages/dashboard";
 import { Create } from "./validation";
 import { Modal } from "../../Modal";
-import { ContainerButton, FormGroup, Input, Label, Select, SubmitButton } from "../../Store/CreateStore/style";
-
+import { Button, FormContainer, Input, Label } from "../ModalEditTicket/styles";
+import { ContainerButton, Select } from "../../Store/CreateStore/styles.tsx";
 
 interface ModalAddTicketProps {
   toggleTicketModal: () => void;
@@ -17,13 +17,11 @@ export const ModalAddTicket = ({
   toggleTicketModal,
   setTickets,
 }: ModalAddTicketProps) => {
- 
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue, 
+    setValue,
   } = useForm<Create>();
 
   const [stores, setStores] = useState<Store[]>([]);
@@ -40,10 +38,8 @@ export const ModalAddTicket = ({
           Authorization: `Bearer ${token}`,
         },
       };
-      
-      const response = await api.post(`/ticket/${data.storeId}`, data, config);
 
-      
+      const response = await api.post(`/ticket/${data.storeId}`, data, config);
 
       if (response.status === 201) {
         setTickets((previousTickets: Ticket[]) => [
@@ -63,28 +59,27 @@ export const ModalAddTicket = ({
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
-        toast.error("Erro ao criar ticket. Por favor, verifique os campos.");
+      toast.error("Erro ao criar ticket. Por favor, verifique os campos.");
     }
   }, [errors]);
 
-
   useEffect(() => {
     const fetchStores = async () => {
-        try {
-            const response = await api.get("/store"); 
-            setStores(response.data);
-        } catch (error: unknown) {
-            toast.error("Erro ao buscar lojas: " + error);
-        }
+      try {
+        const response = await api.get("/store");
+        setStores(response.data);
+      } catch (error: unknown) {
+        toast.error("Erro ao buscar lojas: " + error);
+      }
     };
 
     fetchStores();
-}, []);
+  }, []);
 
   return (
     <Modal toggleModal={toggleTicketModal}>
-      <form onSubmit={handleSubmit(createTicket)}>
-        <FormGroup>
+      <FormContainer onSubmit={handleSubmit(createTicket)}>
+        <div>
           <Label htmlFor="store">Loja</Label>
           <Select
             id="store"
@@ -102,9 +97,8 @@ export const ModalAddTicket = ({
           </Select>
 
           {errors.storeId && <span>{errors.storeId.message}</span>}
-        </FormGroup>
-
-        <FormGroup>
+        </div>
+        <div>
           <Label htmlFor="title">Título</Label>
           <Input
             type="text"
@@ -113,9 +107,7 @@ export const ModalAddTicket = ({
             placeholder="Insira o título"
           />
           {errors.title && <span>{errors.title.message}</span>}
-        </FormGroup>
 
-        <FormGroup>
           <Label htmlFor="description">Descrição</Label>
           <Input
             type="text"
@@ -126,9 +118,8 @@ export const ModalAddTicket = ({
             placeholder="Insira a descrição"
           />
           {errors.description && <span>{errors.description.message}</span>}
-        </FormGroup>
-
-        <FormGroup>
+        </div>
+        <div>
           <Label htmlFor="date">Data</Label>
           <Input
             type="text"
@@ -136,9 +127,7 @@ export const ModalAddTicket = ({
             {...register("date", { required: "Data é obrigatória" })}
           />
           {errors.date && <span>{errors.date.message}</span>}
-        </FormGroup>
 
-        <FormGroup>
           <Label htmlFor="date">Suporte</Label>
           <Input
             type="text"
@@ -146,9 +135,8 @@ export const ModalAddTicket = ({
             {...register("support", { required: "Data é obrigatória" })}
           />
           {errors.support && <span>{errors.support.message}</span>}
-        </FormGroup>
-
-        <FormGroup>
+        </div>
+        <div>
           <Label htmlFor="end_date">Data Final</Label>
           <Input
             type="text"
@@ -156,11 +144,9 @@ export const ModalAddTicket = ({
             {...register("end_date", { required: "Data final é obrigatória" })}
           />
           {errors.end_date && <span>{errors.end_date.message}</span>}
-        </FormGroup>
 
-        <FormGroup>
           <Label htmlFor="type">Tipo</Label>
-  
+
           <Select id="type" {...register("type")}>
             <option value="Desempenho">Desempenho</option>
             <option value="Estoque">Estoque</option>
@@ -172,15 +158,14 @@ export const ModalAddTicket = ({
             <option value="treinamento">treinamento</option>
             <option value="Usabilidade">Usabilidade</option>
             <option value="outros">outros</option>
-
           </Select>
           {errors.type && <span>{errors.type.message}</span>}
-        </FormGroup>
+        </div>
 
         <ContainerButton>
-          <SubmitButton type="submit">Criar ticket</SubmitButton>
+          <Button type="submit">Novo ticket</Button>
         </ContainerButton>
-      </form>
+      </FormContainer>
     </Modal>
   );
 };

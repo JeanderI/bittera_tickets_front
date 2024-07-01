@@ -1,60 +1,83 @@
-import React from "react";
-import { ButtonAdd, ContainerButton, ContainerSearch, ContainerSection, ContainerMenu, Item, List, ListTags, Section } from "../../Section/styles";
+import React, { useState } from "react";
+import {
+  ButtonAdd,
+  ContainerButton,
+  ContainerSearch,
+  ContainerSection,
+  ContainerMenu,
+  Item,
+  List,
+  ListTags,
+  Section,
+} from "../../Section/styles";
 import { FaSearch } from "react-icons/fa";
 
 interface Manager {
-    id: string;
-    name: string;
-    phone: string
+  id: string;
+  name: string;
+  phone: string;
 }
-
 
 interface ManagerListProps {
-    managers: Manager[];
-    toggleModal: () => void;
+  managers: Manager[];
+  toggleModal: () => void;
+  onViewManager: (managerId: string) => void;
+  onUpdateManager: (id: string) => void;
+  onDeleteManager: (managerId: string) => void;
 }
 
-export const ManagerList: React.FC<ManagerListProps> = ({ managers, toggleModal }) => {
-   
-    return (
-        <Section>
-            <ContainerSection>
-                <ContainerMenu>
-                    <h1>Gerentes</h1>
-                    <ContainerButton>
-                        <ButtonAdd type="button" onClick={toggleModal}>
-                            Adicionar gerente
-                        </ButtonAdd>
+export const ManagerList: React.FC<ManagerListProps> = ({
+  managers,
+  toggleModal,
+  onViewManager,
+  /* onUpdateManager,
+  onDeleteManager */
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
 
-                        <ContainerSearch>
-                            <FaSearch />
-                            <input placeholder="pesquisar..." type="text" />
-                        </ContainerSearch>    
-                    </ContainerButton>  
-                </ContainerMenu>
+  const filteredManagers = managers.filter((manager) =>
+    manager.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-                <ListTags>
-                    <p>Nome</p>
-                    <p>Telefone</p>
-                    <p>CNPJ</p>
-                    <p>Gerente</p>
-                    <p>Status</p>
-                </ListTags>
-                    {managers.length > 0 ? (
-                        <List>
-                            {managers.map((manager) => (
-                                <Item key={manager.id}>
-                                    <h3>{manager.name}</h3>
-                                    <p>{manager.phone}</p>
-                                
-                                </Item>
-                            ))}
-                        </List>
-                    ) : (
-                        <p>Nenhum gerente encontrado.</p>
-                    )}
-                
-            </ContainerSection>
-        </Section>
-    )
-}
+  return (
+    <Section>
+      <ContainerSection>
+        <ContainerMenu>
+          <h1>Gerentes</h1>
+          <ContainerButton>
+            <ButtonAdd type="button" onClick={toggleModal}>
+              Adicionar gerente
+            </ButtonAdd>
+
+            <ContainerSearch>
+              <FaSearch />
+              <input
+                placeholder="pesquisar..."
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </ContainerSearch>
+          </ContainerButton>
+        </ContainerMenu>
+
+        <ListTags>
+          <p>Nome</p>
+          <p>Telefone</p>
+        </ListTags>
+        {filteredManagers.length > 0 ? (
+          <List>
+            {filteredManagers.map((manager) => (
+              <Item key={manager.id} onClick={() => onViewManager(manager.id)}>
+                <h3>{manager.name}</h3>
+                <p>{manager.phone}</p>
+              </Item>
+            ))}
+          </List>
+        ) : (
+          <p>Nenhum gerente encontrado.</p>
+        )}
+      </ContainerSection>
+    </Section>
+  );
+};
